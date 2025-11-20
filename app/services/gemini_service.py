@@ -23,7 +23,7 @@ class GeminiService:
             "gemini-3": "gemini-3-pro-preview", # Try lastest version or fallback to flash
         }
 
-        # If models not found, use gemini-1.5-flash like a safe choice
+        # If models not found, use gemini-2.5-flash like a safe choice
         target_model = model_map.get(model_version, "gemini-2.5-flash")
 
         try:
