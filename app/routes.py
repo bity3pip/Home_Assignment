@@ -7,7 +7,7 @@ main_bp = Blueprint('main', __name__)
 gemini_service = GeminiService()
 
 users = {}
-
+DEFAULT_AI_MODEL = "gemini-2.5"
 @main_bp.route('/', methods=['GET'])
 def index():
     return "Welcome to my Flask App!"
@@ -19,18 +19,13 @@ def chat():
 
     user_id = data.get('user_id')
     user_message = data.get('message')
-    selected_model = data.get('model', 'gemini-2.5')  # Value by default
+    selected_model = data.get('model', DEFAULT_AI_MODEL)  # Value by default
 
     if not user_message:
         return jsonify({"error": "Message is required"}), 400
 
-    ai_response = gemini_service.get_chat_response(user_message, selected_model, user_id)
+    return gemini_service.get_chat_response(user_message, selected_model, user_id)
 
-    return jsonify({
-        "reply": ai_response,
-        "model_used": selected_model,
-        "timestamp": str(datetime.datetime.now()),
-    })
 
 @main_bp.route('/api/user', methods=['POST'])
 def user():

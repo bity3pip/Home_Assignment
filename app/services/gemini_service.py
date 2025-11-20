@@ -1,6 +1,7 @@
 import google.generativeai as genai
 import os
-
+import datetime
+from flask import jsonify
 
 class GeminiService:
     def __init__(self):
@@ -28,7 +29,7 @@ class GeminiService:
 
         try:
             model = genai.GenerativeModel(target_model)
-            
+
             history = []
             if user_id:
                 history = self.chat_histories.get(user_id, [])
@@ -38,7 +39,12 @@ class GeminiService:
 
             if user_id:
                 self.chat_histories[user_id] = chat.history
-            
-            return response.text
+
+            return jsonify({
+                "reply": response.text,
+                "model_used": model_version,
+                "timestamp": str(datetime.datetime.now()),
+            })
         except Exception as e:
             print(f"Gemini Error: {e}")
+            return jsonify({"error": "Failed to generate response", "details": str(e)}), 500
